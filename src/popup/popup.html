@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,103 +15,103 @@
       </div>
       <div class="status" id="status">
         <span class="status-dot"></span>
-        <span class="status-text">已启用</span>
+        <span class="status-text">Enabled</span>
       </div>
     </header>
 
     <main class="content">
-      <!-- 总开关 -->
+      <!-- Master Switch -->
       <div class="setting-item primary">
         <label class="switch-label">
-          <span>启用保护</span>
+          <span>Enable Protection</span>
           <input type="checkbox" id="enabled" checked>
           <span class="switch"></span>
         </label>
       </div>
 
-      <!-- 自动混淆 -->
+      <!-- Auto Mask -->
       <div class="setting-item">
         <label class="switch-label">
           <div class="label-text">
-            <span>自动混淆高危信息</span>
-            <small>检测到密钥、密码等自动替换</small>
+            <span>Auto Mask Critical Info</span>
+            <small>Auto-replace keys, passwords, etc.</small>
           </div>
           <input type="checkbox" id="autoMask">
           <span class="switch"></span>
         </label>
       </div>
 
-      <!-- 显示预警 -->
+      <!-- Show Warnings -->
       <div class="setting-item">
         <label class="switch-label">
           <div class="label-text">
-            <span>显示预警面板</span>
-            <small>在输入框下方显示检测结果</small>
+            <span>Show Warning Panel</span>
+            <small>Display detection results below input</small>
           </div>
           <input type="checkbox" id="showWarnings" checked>
           <span class="switch"></span>
         </label>
       </div>
 
-      <!-- 混淆方式 -->
+      <!-- Masking Method -->
       <div class="setting-item">
         <div class="select-label">
-          <span>混淆方式</span>
+          <span>Masking Method</span>
           <select id="maskType">
-            <option value="auto">自动选择</option>
-            <option value="asterisk">完全遮盖 (****)</option>
-            <option value="partial">部分隐藏 (138****8000)</option>
-            <option value="placeholder">占位符 [已隐藏]</option>
-            <option value="fake">生成假数据</option>
+            <option value="auto">Auto (Recommended)</option>
+            <option value="asterisk">Full Masking (****)</option>
+            <option value="partial">Partial (138****8000)</option>
+            <option value="placeholder">Placeholder [Protected]</option>
+            <option value="fake">Fake Data</option>
           </select>
         </div>
       </div>
 
-      <!-- 检测级别 -->
-      <div class="section-title">检测级别</div>
+      <!-- Detection Levels -->
+      <div class="section-title">Detection Levels</div>
       <div class="level-toggles">
         <label class="level-item level-critical">
           <input type="checkbox" id="level-critical" checked>
           <span class="level-check">
             <span class="level-icon">🔴</span>
-            <span class="level-name">高危</span>
+            <span class="level-name">Critical</span>
           </span>
-          <small>密钥、密码、私钥</small>
+          <small>Keys, Passwords, Private Keys</small>
         </label>
         <label class="level-item level-high">
           <input type="checkbox" id="level-high" checked>
           <span class="level-check">
             <span class="level-icon">🟠</span>
-            <span class="level-name">中危</span>
+            <span class="level-name">High</span>
           </span>
-          <small>身份证、银行卡、护照</small>
+          <small>ID Cards, Bank Cards, Passports</small>
         </label>
         <label class="level-item level-medium">
           <input type="checkbox" id="level-medium" checked>
           <span class="level-check">
             <span class="level-icon">🟡</span>
-            <span class="level-name">低危</span>
+            <span class="level-name">Medium</span>
           </span>
-          <small>手机号、邮箱、IP地址</small>
+          <small>Phone Numbers, Emails, IP Addresses</small>
         </label>
       </div>
 
-      <!-- 统计 -->
+      <!-- Stats -->
       <div class="stats">
         <div class="stat-item">
-          <span class="stat-label">本次检测</span>
+          <span class="stat-label">Detected</span>
           <span class="stat-value" id="detectedCount">0</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">已拦截</span>
+          <span class="stat-label">Blocked</span>
           <span class="stat-value" id="blockedCount">0</span>
         </div>
       </div>
     </main>
 
     <footer class="footer">
-      <button class="btn btn-secondary" id="exportLogs">导出日志</button>
-      <button class="btn btn-primary" id="testPage">测试页面</button>
+      <button class="btn btn-secondary" id="exportLogs">Export Logs</button>
+      <button class="btn btn-primary" id="testPage">Test Page</button>
     </footer>
   </div>
 

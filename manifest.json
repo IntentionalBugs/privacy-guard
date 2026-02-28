@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Privacy Guard - AI输入隐私保护",
-  "version": "1.0.0",
-  "description": "在使用大模型时自动检测并保护隐私信息，支持分级预警和混淆替换",
+  "name": "Privacy Guard - AI Input Privacy Protection",
+  "version": "1.1.0",
+  "description": "Automatically detect and protect privacy information when using AI models. Real-time detection, intelligent masking, flexible configuration.",
   "permissions": [
     "storage",
     "activeTab",
@@ -25,7 +25,8 @@
       "16": "assets/icon16.png",
       "48": "assets/icon48.png",
       "128": "assets/icon128.png"
-    }
+    },
+    "default_title": "Privacy Guard - AI Privacy Protection"
   },
   "icons": {
     "16": "assets/icon16.png",

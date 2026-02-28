@@ -1,5 +1,5 @@
 /**
- * Popup Script - 控制面板逻辑
+ * Popup Script - Control Panel Logic / 控制面板逻辑
  */
 
 class PopupController {
@@ -20,7 +20,7 @@ class PopupController {
       const result = await chrome.storage.sync.get(['privacyGuardSettings']);
       this.settings = result.privacyGuardSettings || this.getDefaultSettings();
     } catch (error) {
-      console.error('加载设置失败:', error);
+      console.error('Failed to load settings:', error);
       this.settings = this.getDefaultSettings();
     }
   }
@@ -37,32 +37,32 @@ class PopupController {
   }
 
   bindEvents() {
-    // 总开关
+    // Master Switch
     document.getElementById('enabled').addEventListener('change', (e) => {
       this.settings.enabled = e.target.checked;
       this.saveSettings();
       this.updateStatus();
     });
 
-    // 自动混淆
+    // Auto Mask
     document.getElementById('autoMask').addEventListener('change', (e) => {
       this.settings.autoMask = e.target.checked;
       this.saveSettings();
     });
 
-    // 显示预警
+    // Show Warnings
     document.getElementById('showWarnings').addEventListener('change', (e) => {
       this.settings.showWarnings = e.target.checked;
       this.saveSettings();
     });
 
-    // 混淆方式
+    // Masking Method
     document.getElementById('maskType').addEventListener('change', (e) => {
       this.settings.maskType = e.target.value;
       this.saveSettings();
     });
 
-    // 检测级别
+    // Detection Levels
     ['critical', 'high', 'medium'].forEach(level => {
       document.getElementById(`level-${level}`).addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -76,12 +76,12 @@ class PopupController {
       });
     });
 
-    // 导出日志
+    // Export Logs
     document.getElementById('exportLogs').addEventListener('click', () => {
       this.exportLogs();
     });
 
-    // 测试页面
+    // Test Page
     document.getElementById('testPage').addEventListener('click', () => {
       chrome.tabs.create({ url: chrome.runtime.getURL('test.html') });
     });
@@ -108,10 +108,10 @@ class PopupController {
 
     if (this.settings.enabled) {
       dot.classList.add('active');
-      text.textContent = '已启用';
+      text.textContent = 'Enabled';
     } else {
       dot.classList.remove('active');
-      text.textContent = '已禁用';
+      text.textContent = 'Disabled';
     }
   }
 
@@ -119,7 +119,7 @@ class PopupController {
     try {
       await chrome.storage.sync.set({ privacyGuardSettings: this.settings });
       
-      // 通知content script
+      // Notify content script
       const tabs = await chrome.tabs.query({});
       tabs.forEach(tab => {
         chrome.tabs.sendMessage(tab.id, {
@@ -128,7 +128,7 @@ class PopupController {
         }).catch(() => {});
       });
     } catch (error) {
-      console.error('保存设置失败:', error);
+      console.error('Failed to save settings:', error);
     }
   }
 
@@ -139,7 +139,7 @@ class PopupController {
       document.getElementById('detectedCount').textContent = stats.detected;
       document.getElementById('blockedCount').textContent = stats.blocked;
     } catch (error) {
-      console.error('加载统计失败:', error);
+      console.error('Failed to load stats:', error);
     }
   }
 
@@ -158,10 +158,10 @@ class PopupController {
       
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('导出日志失败:', error);
+      console.error('Failed to export logs:', error);
     }
   }
 }
 
-// 启动
+// Initialize / 启动
 new PopupController();

@@ -1,8 +1,9 @@
 /**
  * Background Script - Service Worker
+ * 后台脚本
  */
 
-// 监听消息
+// Listen for messages / 监听消息
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'UPDATE_BADGE') {
     updateBadge(message.count);
@@ -15,7 +16,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// 更新徽章
+// Update badge / 更新徽章
 function updateBadge(count) {
   if (count > 0) {
     chrome.action.setBadgeText({ text: count.toString() });
@@ -25,7 +26,7 @@ function updateBadge(count) {
   }
 }
 
-// 显示通知
+// Show notification / 显示通知
 function showNotification(message) {
   chrome.notifications.create({
     type: 'basic',
@@ -35,7 +36,7 @@ function showNotification(message) {
   });
 }
 
-// 广播设置到所有标签页
+// Broadcast settings to all tabs / 广播设置到所有标签页
 async function broadcastSettings(settings) {
   const tabs = await chrome.tabs.query({});
   tabs.forEach(tab => {
@@ -46,7 +47,7 @@ async function broadcastSettings(settings) {
   });
 }
 
-// 安装时初始化默认设置
+// Initialize default settings on install / 安装时初始化默认设置
 chrome.runtime.onInstalled.addListener(async () => {
   const result = await chrome.storage.sync.get(['privacyGuardSettings']);
   if (!result.privacyGuardSettings) {
@@ -62,10 +63,10 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-// 标签页更新时重新注入
+// Re-inject content script on tab update / 标签页更新时重新注入
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
-    // 检查是否是支持的AI网站
+    // Check if it's a supported AI website / 检查是否是支持的AI网站
     const supportedSites = [
       'chat.openai.com',
       'claude.ai',

@@ -1,31 +1,32 @@
 /**
- * Content Script - 监听AI网站输入，实时检测隐私信息
- * 包含检测引擎（内联版本）
+ * Content Script - Monitor AI website inputs, real-time privacy detection
+ * 内容脚本 - 监听AI网站输入，实时检测隐私信息
+ * English UI Version
  */
 
-// ============ 检测引擎 ============
+// ============ Detection Engine / 检测引擎 ============
 const PRIVACY_LEVELS = {
-  CRITICAL: { level: 'critical', name: '高危', icon: '🔴', autoBlock: true, color: '#ff3b30' },
-  HIGH: { level: 'high', name: '中危', icon: '🟠', autoBlock: false, color: '#ff9500' },
-  MEDIUM: { level: 'medium', name: '低危', icon: '🟡', autoBlock: false, color: '#ffcc00' }
+  CRITICAL: { level: 'critical', name: 'Critical', icon: '🔴', autoBlock: true, color: '#ff3b30' },
+  HIGH: { level: 'high', name: 'High', icon: '🟠', autoBlock: false, color: '#ff9500' },
+  MEDIUM: { level: 'medium', name: 'Medium', icon: '🟡', autoBlock: false, color: '#ffcc00' }
 };
 
 const PRIVACY_PATTERNS = {
   critical: [
-    { name: 'API密钥', patterns: [/sk-[a-zA-Z0-9]{32,}/gi, /AIza[a-zA-Z0-9_-]{35}/g, /ghp_[a-zA-Z0-9]{36}/g, /xox[baprs]-[a-zA-Z0-9-]{10,}/g], maskType: 'asterisk' },
-    { name: '密码', patterns: [/(?:password|passwd|pwd)['":\s]*['"]?([^\s'"]{6,})['"]?/gi], maskType: 'asterisk' },
-    { name: '私钥', patterns: [/-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----/gi], maskType: 'placeholder' },
-    { name: '访问令牌', patterns: [/Bearer\s+[a-zA-Z0-9_.-]{20,}/gi], maskType: 'asterisk' }
+    { name: 'API Key', patterns: [/sk-[a-zA-Z0-9]{32,}/gi, /AIza[a-zA-Z0-9_-]{35}/g, /ghp_[a-zA-Z0-9]{36}/g, /xox[baprs]-[a-zA-Z0-9-]{10,}/g], maskType: 'asterisk' },
+    { name: 'Password', patterns: [/(?:password|passwd|pwd)['":\s]*['"]?([^\s'"]{6,})['"]?/gi], maskType: 'asterisk' },
+    { name: 'Private Key', patterns: [/-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----/gi], maskType: 'placeholder' },
+    { name: 'Access Token', patterns: [/Bearer\s+[a-zA-Z0-9_.-]{20,}/gi], maskType: 'asterisk' }
   ],
   high: [
-    { name: '身份证号', patterns: [/\b[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])\d{3}[\dXx]\b/g], maskType: 'partial' },
-    { name: '银行卡号', patterns: [/\b(?:62|4|5)\d{14,17}\b/g], maskType: 'partial' },
-    { name: '护照号', patterns: [/\b[EG][0-9]{8}\b/gi], maskType: 'partial' }
+    { name: 'ID Card', patterns: [/\b[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])\d{3}[\dXx]\b/g], maskType: 'partial' },
+    { name: 'Bank Card', patterns: [/\b(?:62|4|5)\d{14,17}\b/g], maskType: 'partial' },
+    { name: 'Passport', patterns: [/\b[EG][0-9]{8}\b/gi], maskType: 'partial' }
   ],
   medium: [
-    { name: '手机号', patterns: [/\b1[3-9]\d{9}\b/g], maskType: 'partial' },
-    { name: '邮箱', patterns: [/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g], maskType: 'partial' },
-    { name: 'IP地址', patterns: [/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g], maskType: 'partial' }
+    { name: 'Phone Number', patterns: [/\b1[3-9]\d{9}\b/g], maskType: 'partial' },
+    { name: 'Email', patterns: [/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g], maskType: 'partial' },
+    { name: 'IP Address', patterns: [/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g], maskType: 'partial' }
   ]
 };
 
@@ -66,15 +67,15 @@ function maskPrivacy(text, detected, maskType = 'auto') {
     
     if (type === 'asterisk') replacement = '*'.repeat(Math.min(item.text.length, 20));
     else if (type === 'partial') replacement = item.text.substring(0, 2) + '*'.repeat(Math.min(item.text.length - 4, 10)) + item.text.substring(item.text.length - 2);
-    else if (type === 'placeholder') replacement = `[${item.type}已隐藏]`;
-    else replacement = '[已保护]';
+    else if (type === 'placeholder') replacement = `[${item.type} Protected]`;
+    else replacement = '[Protected]';
     
     result = result.substring(0, item.start) + replacement + result.substring(item.end);
   });
   return result;
 }
 
-// ============ 主逻辑 ============
+// ============ Main Logic / 主逻辑 ============
 class PrivacyGuard {
   constructor() {
     this.settings = { enabled: true, autoMask: false, maskType: 'auto', enabledLevels: ['critical', 'high', 'medium'], showWarnings: true };
@@ -87,7 +88,7 @@ class PrivacyGuard {
     this.setupMessageListener();
     this.setupInputListeners();
     this.createWarningOverlay();
-    console.log('[Privacy Guard] 已启动');
+    console.log('[Privacy Guard] Initialized / 已启动');
   }
 
   async loadSettings() {
@@ -95,7 +96,7 @@ class PrivacyGuard {
       const result = await chrome.storage.sync.get(['privacyGuardSettings']);
       if (result.privacyGuardSettings) this.settings = { ...this.settings, ...result.privacyGuardSettings };
     } catch (error) {
-      console.error('[Privacy Guard] 加载设置失败:', error);
+      console.error('[Privacy Guard] Failed to load settings / 加载设置失败:', error);
     }
   }
 
@@ -145,7 +146,7 @@ class PrivacyGuard {
     if (element.isContentEditable) element.textContent = maskedText;
     else element.value = maskedText;
     element.dispatchEvent(new Event('input', { bubbles: true }));
-    this.showNotification(`已自动混淆 ${items.length} 处隐私信息`);
+    this.showNotification(`Auto-masked ${items.length} privacy items / 已自动混淆 ${items.length} 处隐私信息`);
   }
 
   createWarningOverlay() {
@@ -154,13 +155,13 @@ class PrivacyGuard {
     this.warningOverlay.innerHTML = `
       <div class="pg-header">
         <span class="pg-icon">🛡️</span>
-        <span class="pg-title">隐私保护预警</span>
+        <span class="pg-title">Privacy Warning</span>
         <button class="pg-close">×</button>
       </div>
       <div class="pg-content"></div>
       <div class="pg-actions">
-        <button class="pg-btn pg-btn-mask">混淆全部</button>
-        <button class="pg-btn pg-btn-ignore">忽略</button>
+        <button class="pg-btn pg-btn-mask">Mask All</button>
+        <button class="pg-btn pg-btn-ignore">Ignore</button>
       </div>
     `;
     this.warningOverlay.style.display = 'none';
