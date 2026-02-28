@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Guard 测试页面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    header p {
+      opacity: 0.7;
+      font-size: 16px;
+    }
+    
+    .test-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .test-section h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .test-section h2 span {
+      font-size: 24px;
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      resize: vertical;
+      transition: all 0.3s;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(102, 126, 234, 0.1);
+      border-left: 4px solid #667eea;
+      border-radius: 8px;
+    }
+    
+    .result h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      opacity: 0.8;
+    }
+    
+    .result-content {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    
+    .sample-list {
+      margin-top: 30px;
+    }
+    
+    .sample-item {
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .sample-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+    }
+    
+    .sample-item code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    .level-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .level-critical {
+      background: rgba(255, 59, 48, 0.2);
+      color: #ff3b30;
+    }
+    
+    .level-high {
+      background: rgba(255, 149, 0, 0.2);
+      color: #ff9500;
+    }
+    
+    .level-medium {
+      background: rgba(255, 204, 0, 0.2);
+      color: #ffcc00;
+    }
+    
+    .instructions {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 12px;
+    }
+    
+    .instructions h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    
+    .instructions ol {
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🛡️ Privacy Guard 测试页面</h1>
+      <p>在下方输入框中测试隐私检测功能</p>
+    </header>
+
+    <div class="test-section">
+      <h2><span>📝</span> 测试输入</h2>
+      <textarea id="testInput" placeholder="在此输入包含隐私信息的文本，例如：
+- API密钥: sk-xxxxx
+- 身份证号: 110101199001011234
+- 手机号: 13800138000
+- 邮箱: user@example.com"></textarea>
+      
+      <div class="result" id="result" style="display: none;">
+        <h3>检测结果：</h3>
+        <div class="result-content" id="resultContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2><span>🎯</span> 测试样本（点击填充）</h2>
+      <div class="sample-list">
+        <div class="sample-item" onclick="fillSample('api-key')">
+          <div>
+            <strong>API密钥</strong>
+            <code>sk-xxxxxxxxxxxxx</code>
+          </div>
+          <span class="level-badge level-critical">🔴 高危</span>
+        </div>
+        <div class="sample-item" onclick="fillSample('password')">
+          <div>
+            <strong>密码</strong>
+            <code>password: mypassword123</code>
+          </div>
+          <span class="level-badge level-critical">🔴 高危</span>
+        </div>
+        <div class="sample-item" onclick="fillSample('id-card')">
+          <div>
+            <strong>身份证号</strong>
+            <code>110101199001011234</code>
+          </div>
+          <span class="level-badge level-high">🟠 中危</span>
+        </div>
+        <div class="sample-item" onclick="fillSample('phone')">
+          <div>
+            <strong>手机号</strong>
+            <code>13800138000</code>
+          </div>
+          <span class="level-badge level-medium">🟡 低危</span>
+        </div>
+        <div class="sample-item" onclick="fillSample('email')">
+          <div>
+            <strong>邮箱地址</strong>
+            <code>user@example.com</code>
+          </div>
+          <span class="level-badge level-medium">🟡 低危</span>
+        </div>
+        <div class="sample-item" onclick="fillSample('mixed')">
+          <div>
+            <strong>混合内容</strong>
+            <code>包含多种隐私信息</code>
+          </div>
+          <span class="level-badge level-critical">多个级别</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 使用说明</h3>
+      <ol>
+        <li>在浏览器中安装 Privacy Guard 插件</li>
+        <li>在上方输入框中输入或粘贴包含隐私信息的文本</li>
+        <li>插件会自动检测并显示预警面板</li>
+        <li>可以选择"混淆全部"替换隐私信息</li>
+        <li>也可以点击插件图标进行详细设置</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const samples = {
+      'api-key': '我的OpenAI API密钥是：sk-proj-1234567890abcdefghijklmnopqrstuvwx，请帮我测试一下。',
+      'password': '这是我的账户信息：\n用户名：admin\n密码：MySecureP@ss123\n请帮我检查安全性。',
+      'id-card': '我的身份证号是110101199001011234，请问这个号码是哪里的？',
+      'phone': '联系电话：13800138000，有问题随时联系我。',
+      'email': '我的邮箱是 user@example.com，请发送报告到这个地址。',
+      'mixed': `用户信息：
+- 姓名：张三
+- 身份证：110101199001011234
+- 手机：13800138000
+- 邮箱：zhangsan@company.com
+- API密钥：sk-proj-abcdefghijklmnopqrstuvwxyz
+- 银行卡：6225880123456789
+
+请帮我整理一下这些信息。`
+    };
+
+    function fillSample(type) {
+      const textarea = document.getElementById('testInput');
+      textarea.value = samples[type];
+      textarea.focus();
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // 监听输入变化（用于测试）
+    document.getElementById('testInput').addEventListener('input', function(e) {
+      const resultDiv = document.getElementById('result');
+      const resultContent = document.getElementById('resultContent');
+      
+      // 这里可以添加自定义检测逻辑
+      // 实际检测由插件的content script完成
+    });
+  </script>
+</body>
+</html>

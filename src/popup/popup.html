@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Guard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="header">
+      <div class="header-title">
+        <span class="logo">🛡️</span>
+        <h1>Privacy Guard</h1>
+      </div>
+      <div class="status" id="status">
+        <span class="status-dot"></span>
+        <span class="status-text">已启用</span>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 总开关 -->
+      <div class="setting-item primary">
+        <label class="switch-label">
+          <span>启用保护</span>
+          <input type="checkbox" id="enabled" checked>
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <!-- 自动混淆 -->
+      <div class="setting-item">
+        <label class="switch-label">
+          <div class="label-text">
+            <span>自动混淆高危信息</span>
+            <small>检测到密钥、密码等自动替换</small>
+          </div>
+          <input type="checkbox" id="autoMask">
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <!-- 显示预警 -->
+      <div class="setting-item">
+        <label class="switch-label">
+          <div class="label-text">
+            <span>显示预警面板</span>
+            <small>在输入框下方显示检测结果</small>
+          </div>
+          <input type="checkbox" id="showWarnings" checked>
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <!-- 混淆方式 -->
+      <div class="setting-item">
+        <div class="select-label">
+          <span>混淆方式</span>
+          <select id="maskType">
+            <option value="auto">自动选择</option>
+            <option value="asterisk">完全遮盖 (****)</option>
+            <option value="partial">部分隐藏 (138****8000)</option>
+            <option value="placeholder">占位符 [已隐藏]</option>
+            <option value="fake">生成假数据</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 检测级别 -->
+      <div class="section-title">检测级别</div>
+      <div class="level-toggles">
+        <label class="level-item level-critical">
+          <input type="checkbox" id="level-critical" checked>
+          <span class="level-check">
+            <span class="level-icon">🔴</span>
+            <span class="level-name">高危</span>
+          </span>
+          <small>密钥、密码、私钥</small>
+        </label>
+        <label class="level-item level-high">
+          <input type="checkbox" id="level-high" checked>
+          <span class="level-check">
+            <span class="level-icon">🟠</span>
+            <span class="level-name">中危</span>
+          </span>
+          <small>身份证、银行卡、护照</small>
+        </label>
+        <label class="level-item level-medium">
+          <input type="checkbox" id="level-medium" checked>
+          <span class="level-check">
+            <span class="level-icon">🟡</span>
+            <span class="level-name">低危</span>
+          </span>
+          <small>手机号、邮箱、IP地址</small>
+        </label>
+      </div>
+
+      <!-- 统计 -->
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-label">本次检测</span>
+          <span class="stat-value" id="detectedCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">已拦截</span>
+          <span class="stat-value" id="blockedCount">0</span>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <button class="btn btn-secondary" id="exportLogs">导出日志</button>
+      <button class="btn btn-primary" id="testPage">测试页面</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

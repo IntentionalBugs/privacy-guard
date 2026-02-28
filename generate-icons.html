@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>图标生成器</title>
+</head>
+<body>
+  <h1>Privacy Guard 图标生成器</h1>
+  <p>右键保存以下图标到 assets/ 文件夹</p>
+  
+  <div style="margin: 20px 0;">
+    <h3>16x16</h3>
+    <canvas id="icon16" width="16" height="16"></canvas>
+  </div>
+  
+  <div style="margin: 20px 0;">
+    <h3>48x48</h3>
+    <canvas id="icon48" width="48" height="48"></canvas>
+  </div>
+  
+  <div style="margin: 20px 0;">
+    <h3>128x128</h3>
+    <canvas id="icon128" width="128" height="128"></canvas>
+  </div>
+  
+  <button onclick="downloadAll()">下载全部图标</button>
+
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const center = size / 2;
+      
+      // 背景渐变
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      
+      // 圆形背景
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(center, center, center * 0.9, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // 盾牌图标
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = size * 0.08;
+      
+      // 盾牌形状
+      ctx.beginPath();
+      const shieldTop = center * 0.5;
+      const shieldBottom = center * 1.5;
+      const shieldWidth = size * 0.5;
+      
+      ctx.moveTo(center, shieldTop);
+      ctx.lineTo(center + shieldWidth / 2, shieldTop + size * 0.15);
+      ctx.lineTo(center + shieldWidth / 2, center);
+      ctx.quadraticCurveTo(center + shieldWidth / 2, shieldBottom - size * 0.1, center, shieldBottom);
+      ctx.quadraticCurveTo(center - shieldWidth / 2, shieldBottom - size * 0.1, center - shieldWidth / 2, center);
+      ctx.lineTo(center - shieldWidth / 2, shieldTop + size * 0.15);
+      ctx.closePath();
+      ctx.fill();
+      
+      // 对勾
+      ctx.strokeStyle = '#667eea';
+      ctx.lineWidth = size * 0.1;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      
+      ctx.beginPath();
+      ctx.moveTo(center - size * 0.2, center);
+      ctx.lineTo(center - size * 0.05, center + size * 0.15);
+      ctx.lineTo(center + size * 0.25, center - size * 0.15);
+      ctx.stroke();
+    }
+    
+    // 绘制所有尺寸
+    ['icon16', 'icon48', 'icon128'].forEach(id => {
+      drawIcon(document.getElementById(id));
+    });
+    
+    function downloadAll() {
+      ['16', '48', '128'].forEach(size => {
+        const canvas = document.getElementById('icon' + size);
+        const link = document.createElement('a');
+        link.download = `icon${size}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
