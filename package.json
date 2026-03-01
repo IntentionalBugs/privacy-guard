@@ -1,0 +1,12 @@
+{
+  "name": "privacy-guard-extension",
+  "version": "1.1.0",
+  "description": "AI Input Privacy Protection Extension - Automatically detect and protect privacy information when using AI models / AI输入隐私保护插件",
+  "scripts": {
+    "build": "echo 'Extension ready to load in browser'",
+    "package": "cd .. && zip -r privacy-guard-extension.zip privacy-guard-extension -x '*.git*' -x 'node_modules/*'"
+  },
+  "keywords": ["privacy", "security", "ai", "chatgpt", "claude", "gemini", "protection", "extension"],
+  "author": "IntentionalBugs",
+  "license": "MIT"
+}

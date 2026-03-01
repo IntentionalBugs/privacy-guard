@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Guard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="header">
+      <div class="header-title">
+        <span class="logo">🛡️</span>
+        <h1>Privacy Guard</h1>
+      </div>
+      <div class="status" id="status">
+        <span class="status-dot"></span>
+        <span class="status-text">Enabled</span>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Master Switch -->
+      <div class="setting-item primary">
+        <label class="switch-label">
+          <span>Enable Protection</span>
+          <input type="checkbox" id="enabled" checked>
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <!-- Auto Mask -->
+      <div class="setting-item">
+        <label class="switch-label">
+          <div class="label-text">
+            <span>Auto Mask Critical Info</span>
+            <small>Auto-replace keys, passwords, etc.</small>
+          </div>
+          <input type="checkbox" id="autoMask">
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <!-- Show Warnings -->
+      <div class="setting-item">
+        <label class="switch-label">
+          <div class="label-text">
+            <span>Show Warning Panel</span>
+            <small>Display detection results below input</small>
+          </div>
+          <input type="checkbox" id="showWarnings" checked>
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <!-- Masking Method -->
+      <div class="setting-item">
+        <div class="select-label">
+          <span>Masking Method</span>
+          <select id="maskType">
+            <option value="auto">Auto (Recommended)</option>
+            <option value="asterisk">Full Masking (****)</option>
+            <option value="partial">Partial (138****8000)</option>
+            <option value="placeholder">Placeholder [Protected]</option>
+            <option value="fake">Fake Data</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Detection Levels -->
+      <div class="section-title">Detection Levels</div>
+      <div class="level-toggles">
+        <label class="level-item level-critical">
+          <input type="checkbox" id="level-critical" checked>
+          <span class="level-check">
+            <span class="level-icon">🔴</span>
+            <span class="level-name">Critical</span>
+          </span>
+          <small>Keys, Passwords, Private Keys</small>
+        </label>
+        <label class="level-item level-high">
+          <input type="checkbox" id="level-high" checked>
+          <span class="level-check">
+            <span class="level-icon">🟠</span>
+            <span class="level-name">High</span>
+          </span>
+          <small>ID Cards, Bank Cards, Passports</small>
+        </label>
+        <label class="level-item level-medium">
+          <input type="checkbox" id="level-medium" checked>
+          <span class="level-check">
+            <span class="level-icon">🟡</span>
+            <span class="level-name">Medium</span>
+          </span>
+          <small>Phone Numbers, Emails, IP Addresses</small>
+        </label>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-label">Detected</span>
+          <span class="stat-value" id="detectedCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Blocked</span>
+          <span class="stat-value" id="blockedCount">0</span>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <button class="btn btn-secondary" id="exportLogs">Export Logs</button>
+      <button class="btn btn-primary" id="testPage">Test Page</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
